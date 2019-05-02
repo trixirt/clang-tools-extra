@@ -1,9 +1,10 @@
 #include "ClangTidyTest.h"
-#include "llvm/HeaderGuardCheck.h"
+#include "bugprone/HeaderGuardCheck.h"
 #include "llvm/IncludeOrderCheck.h"
 #include "gtest/gtest.h"
 
 using namespace clang::tidy::llvm_check;
+using namespace clang::tidy::bugprone;
 
 namespace clang {
 namespace tidy {
@@ -14,8 +15,10 @@ namespace test {
 static std::string runHeaderGuardCheck(StringRef Code, const Twine &Filename,
                                        Optional<StringRef> ExpectedWarning) {
   std::vector<ClangTidyError> Errors;
-  std::string Result = test::runCheckOnCode<LLVMHeaderGuardCheck>(
-      Code, &Errors, Filename, std::string("-xc++-header"));
+  ClangTidyOptions Options;
+  Options.CheckOptions["test-check-0.GuardStyle"] = "llvm";
+  std::string Result = test::runCheckOnCode<BugproneHeaderGuardCheck>(
+      Code, &Errors, Filename, std::string("-xc++-header"), Options);
   if (Errors.size() != (size_t)ExpectedWarning.hasValue())
     return "invalid error count";
   if (ExpectedWarning && *ExpectedWarning != Errors.back().Message.Message)
@@ -25,9 +28,9 @@ static std::string runHeaderGuardCheck(StringRef Code, const Twine &Filename,
 }
 
 namespace {
-struct WithEndifComment : public LLVMHeaderGuardCheck {
+struct WithEndifComment : public BugproneHeaderGuardCheck {
   WithEndifComment(StringRef Name, ClangTidyContext *Context)
-      : LLVMHeaderGuardCheck(Name, Context) {}
+      : BugproneHeaderGuardCheck(Name, Context) {}
   bool shouldSuggestEndifComment(StringRef Filename) override { return true; }
 };
 } // namespace
@@ -36,8 +39,10 @@ static std::string
 runHeaderGuardCheckWithEndif(StringRef Code, const Twine &Filename,
                              Optional<StringRef> ExpectedWarning) {
   std::vector<ClangTidyError> Errors;
+  ClangTidyOptions Options;
+  Options.CheckOptions["test-check-0.GuardStyle"] = "llvm";
   std::string Result = test::runCheckOnCode<WithEndifComment>(
-      Code, &Errors, Filename, std::string("-xc++-header"));
+      Code, &Errors, Filename, std::string("-xc++-header"), Options);
   if (Errors.size() != (size_t)ExpectedWarning.hasValue())
     return "invalid error count";
   if (ExpectedWarning && *ExpectedWarning != Errors.back().Message.Message)

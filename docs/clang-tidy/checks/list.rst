@@ -45,6 +45,7 @@ Clang-Tidy Checks
    bugprone-fold-init-type
    bugprone-forward-declaration-namespace
    bugprone-forwarding-reference-overload
+   bugprone-header-guard
    bugprone-inaccurate-erase
    bugprone-incorrect-roundings
    bugprone-integer-division

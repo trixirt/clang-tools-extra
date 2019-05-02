@@ -10,7 +10,7 @@
 #include "../ClangTidyModule.h"
 #include "../ClangTidyModuleRegistry.h"
 #include "../readability/NamespaceCommentCheck.h"
-#include "HeaderGuardCheck.h"
+#include "../bugprone/HeaderGuardCheck.h"
 #include "IncludeOrderCheck.h"
 #include "PreferIsaOrDynCastInConditionalsCheck.h"
 #include "TwineLocalCheck.h"
@@ -22,7 +22,8 @@ namespace llvm_check {
 class LLVMModule : public ClangTidyModule {
 public:
   void addCheckFactories(ClangTidyCheckFactories &CheckFactories) override {
-    CheckFactories.registerCheck<LLVMHeaderGuardCheck>("llvm-header-guard");
+    CheckFactories.registerCheck<bugprone::BugproneHeaderGuardCheck>(
+	"llvm-header-guard");
     CheckFactories.registerCheck<IncludeOrderCheck>("llvm-include-order");
     CheckFactories.registerCheck<readability::NamespaceCommentCheck>(
         "llvm-namespace-comment");
@@ -30,6 +31,16 @@ public:
         "llvm-prefer-isa-or-dyn-cast-in-conditionals");
     CheckFactories.registerCheck<TwineLocalCheck>("llvm-twine-local");
   }
+
+  ClangTidyOptions getModuleOptions() override {
+    ClangTidyOptions Options;
+    ClangTidyOptions::OptionMap &Opts = Options.CheckOptions;
+
+    Opts["llvm-header-guard.GuardStyle"] = "llvm";
+
+    return Options;
+  }
+
 };
 
 // Register the LLVMTidyModule using this statically initialized variable.

@@ -20,6 +20,7 @@
 #include "FoldInitTypeCheck.h"
 #include "ForwardDeclarationNamespaceCheck.h"
 #include "ForwardingReferenceOverloadCheck.h"
+#include "HeaderGuardCheck.h"
 #include "InaccurateEraseCheck.h"
 #include "IncorrectRoundingsCheck.h"
 #include "IntegerDivisionCheck.h"
@@ -80,6 +81,8 @@ public:
         "bugprone-forward-declaration-namespace");
     CheckFactories.registerCheck<ForwardingReferenceOverloadCheck>(
         "bugprone-forwarding-reference-overload");
+    CheckFactories.registerCheck<BugproneHeaderGuardCheck>(
+        "bugprone-header-guard");
     CheckFactories.registerCheck<InaccurateEraseCheck>(
         "bugprone-inaccurate-erase");
     CheckFactories.registerCheck<IncorrectRoundingsCheck>(

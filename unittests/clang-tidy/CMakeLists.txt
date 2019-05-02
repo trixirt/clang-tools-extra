@@ -29,6 +29,7 @@ target_link_libraries(ClangTidyTests
   clangSerialization
   clangTidy
   clangTidyAndroidModule
+  clangTidyBugproneModule
   clangTidyGoogleModule
   clangTidyLLVMModule
   clangTidyObjCModule

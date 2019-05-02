@@ -122,6 +122,11 @@ Improvements to clang-tidy
   Checks whether there are underscores in googletest test and test case names in
   test macros, which is prohibited by the Googletest FAQ.
 
+- New :doc:`bugprone-header-guard
+  <clang-tidy/checks/bugprone-header-guard>` check.
+
+  Finds and fixes missing header guards and does not enforce any style.
+
 - New :doc:`objc-super-self <clang-tidy/checks/objc-super-self>` check.
 
   Finds invocations of ``-self`` on super instances in initializers of
